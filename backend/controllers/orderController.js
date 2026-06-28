@@ -207,6 +207,27 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
+// PUT /api/orders/admin/:id/payment-status — updates the payment status manually (e.g. marking COD as Paid, or refunding)
+exports.updatePaymentStatus = async (req, res) => {
+  try {
+    const { paymentStatus } = req.body;
+    
+    if (!["Pending", "Paid", "Failed", "Refunded"].includes(paymentStatus)) {
+      return res.status(400).json({ success: false, message: "Invalid payment status" });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
+
+    order.paymentStatus = paymentStatus;
+    await order.save();
+
+    return res.status(200).json({ success: true, order });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message || "Failed to update payment status" });
+  }
+};
+
 // GET /api/orders/admin/customers — customer list for admin dashboard
 exports.getCustomers = async (req, res) => {
   try {
@@ -242,18 +263,24 @@ exports.getCustomers = async (req, res) => {
   }
 };
 
-// GET /api/orders/admin/sales-report?from=&to= — revenue summary for the admin dashboard
+// GET /api/orders/admin/sales-report?from=&to=&paymentStatus= — revenue summary for the admin dashboard
 exports.getSalesReport = async (req, res) => {
   try {
-    const { from, to } = req.query;
+    const { from, to, paymentStatus } = req.query;
     const dateFilter = {};
     if (from) dateFilter.$gte = new Date(from);
     if (to) dateFilter.$lte = new Date(to);
 
     const match = {
-      paymentStatus: "Paid",
       ...(from || to ? { createdAt: dateFilter } : {}),
     };
+    
+    // Default to 'Paid' for backward compatibility, unless 'All' is explicitly requested
+    if (paymentStatus && paymentStatus !== "All") {
+      match.paymentStatus = paymentStatus;
+    } else if (!paymentStatus) {
+      match.paymentStatus = "Paid";
+    }
 
     const [summary] = await Order.aggregate([
       { $match: match },
