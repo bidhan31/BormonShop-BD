@@ -17,10 +17,8 @@ app.use(express.json());
 app.use(cookieParser()); // required to read the JWT http-only cookie in middleware/auth.js
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL, // Local dev or primary environment variable
-      "https://bormonshop-bd.netlify.app" // Production Netlify origin
-    ],
+    origin: process.env.NODE_ENV === 'development' ?
+      process.env.CLIENT_URL : "https://bormonshop-bd.netlify.app",
     credentials: true, // allow cookies to be sent cross-origin
   })
 );
