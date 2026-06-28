@@ -11,10 +11,11 @@ function generateToken(user) {
 
 // Sets the JWT as an HTTP-only cookie so client-side JS can never read it (XSS protection)
 function setTokenCookie(res, token) {
+  const isProd = process.env.NODE_ENV !== "development";
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // HTTPS only in prod
-    sameSite: "lax",
+    secure: isProd, // HTTPS only in prod
+    sameSite: isProd ? "none" : "lax", // 'none' is REQUIRED for cross-domain cookies (Netlify -> Render)
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days, matches JWT_EXPIRES_IN default
   });
 }

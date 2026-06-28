@@ -12,6 +12,7 @@ const couponRoutes = require("./routes/coupons");
 const paymentRoutes = require("./routes/payment");
 
 const app = express();
+app.set("trust proxy", 1); // Trust the first proxy (Render load balancer) for secure cookies
 
 app.use(express.json());
 app.use(cookieParser()); // required to read the JWT http-only cookie in middleware/auth.js
