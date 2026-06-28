@@ -13,42 +13,56 @@ import { Product } from "@/types/product";
 
 
 
-let Products: Product[] = [];
-
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/products');
-      const data = await response.json();
-      Products = data.products;
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
-
-fetchProducts();
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export async function getFeaturedProducts(): Promise<Product[]> {
-
-  return Products.filter((p) => p.isFeatured);
+  try {
+    const res = await fetch(`${API_URL}/products`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.products || []).filter((p: Product) => p.isFeatured);
+  } catch (err) {
+    console.error("Failed to fetch featured products:", err);
+    return [];
+  }
 }
 
 export async function getProductsByTag(
   tag: "new-arrival" | "best-seller" | "trending"
 ): Promise<Product[]> {
-  return Products.filter((p) => p.tags.includes(tag));
+  try {
+    const res = await fetch(`${API_URL}/products?tag=${tag}`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.products || [];
+  } catch (err) {
+    console.error(`Failed to fetch products by tag ${tag}:`, err);
+    return [];
+  }
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  console.log(slug);
-  // console.log("Products:", Products);
-  
-  const product = Products.find((p) => p.slug === slug);
-  console.log("Product found:", product);
-  return product;
+  try {
+    const res = await fetch(`${API_URL}/products/${slug}`, { next: { revalidate: 60 } });
+    if (!res.ok) return undefined;
+    const data = await res.json();
+    return data.product;
+  } catch (err) {
+    console.error(`Failed to fetch product by slug ${slug}:`, err);
+    return undefined;
+  }
 }
 
 export async function getRelatedProducts(category: string, excludeId: string): Promise<Product[]> {
-  return Products.filter((p) => p.category === category && p._id !== excludeId);
+  try {
+    const res = await fetch(`${API_URL}/products/${excludeId}/related`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.products || [];
+  } catch (err) {
+    console.error("Failed to fetch related products:", err);
+    return [];
+  }
 }
 
 interface SearchParams {
@@ -61,31 +75,15 @@ interface SearchParams {
   sort?: string;
 }
 
-// Mirrors the real GET /api/products?... query params — same filtering logic,
-// just running client-side against the mock array instead of MongoDB.
 export async function searchProducts(params: SearchParams): Promise<Product[]> {
-  console.log("Fetched products from API with params");
-  const response = await fetch(`http://localhost:5000/api/products?` + new URLSearchParams(params as any));
-  console.log(response);
-  
-  const data = await response.json();
-  console.log(data);
-  
-  let results = data.products as Product[];
-
-  if (params.q) {
-    const q = params.q.toLowerCase();
-    results = results.filter((p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+  try {
+    const urlParams = new URLSearchParams(params as any);
+    const res = await fetch(`${API_URL}/products?${urlParams.toString()}`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.products || [];
+  } catch (err) {
+    console.error("Failed to search products:", err);
+    return [];
   }
-  if (params.category) results = results.filter((p) => p.category === params.category);
-  if (params.tag) results = results.filter((p) => p.tags.includes(params.tag as any));
-  if (params.size) results = results.filter((p) => p.variants.some((v) => v.size === params.size));
-  if (params.minPrice != null) results = results.filter((p) => p.price >= params.minPrice!);
-  if (params.maxPrice != null) results = results.filter((p) => p.price <= params.maxPrice!);
-
-  if (params.sort === "price-asc") results.sort((a, b) => a.price - b.price);
-  else if (params.sort === "price-desc") results.sort((a, b) => b.price - a.price);
-  else if (params.sort === "rating") results.sort((a, b) => b.rating - a.rating);
-
-  return results;
 }
