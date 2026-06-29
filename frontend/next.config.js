@@ -18,6 +18,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com", // Google profile avatars
       },
+      {
+        protocol: "https",
+        hostname: "github.com", // Google profile avatars
+      },
+      
     ],
   },
 };

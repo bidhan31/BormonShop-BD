@@ -10,76 +10,25 @@ const Product = require("./models/Product");
 const User = require("./models/User");
 const Coupon = require("./models/Coupon");
 
-const sampleProducts = [
-  {
-    name: "Midnight Oversized Tee",
-    slug: "midnight-oversized-tee",
-    description:
-      "Premium heavyweight cotton oversized tee with a boxy silhouette. Garment-dyed for a soft, lived-in feel.",
-    category: "T-Shirts",
-    price: 1450,
-    discountPrice: 1199,
-    images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800",
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800",
-    ],
-    variants: [
-      { size: "S", color: "Black", colorHex: "#0F0F0F", stock: 8 },
-      { size: "M", color: "Black", colorHex: "#0F0F0F", stock: 12 },
-      { size: "L", color: "Black", colorHex: "#0F0F0F", stock: 5 },
-    ],
-    tags: ["new-arrival", "best-seller"],
-    isFeatured: true,
-  },
-  {
-    name: "Ivory Tailored Shirt",
-    slug: "ivory-tailored-shirt",
-    description: "Slim-fit formal shirt with a soft sheen finish, perfect for evening occasions.",
-    category: "Shirts",
-    price: 2100,
-    images: ["https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800"],
-    variants: [
-      { size: "M", color: "Ivory", colorHex: "#F5F0E6", stock: 10 },
-      { size: "L", color: "Ivory", colorHex: "#F5F0E6", stock: 7 },
-    ],
-    tags: ["trending"],
-    isFeatured: true,
-  },
-  {
-    name: "Carbon Cargo Pants",
-    slug: "carbon-cargo-pants",
-    description: "Technical cargo pants with articulated knees and a tapered ankle.",
-    category: "Pants",
-    price: 2850,
-    images: ["https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800"],
-    variants: [{ size: "L", color: "Charcoal", colorHex: "#36454F", stock: 4 }],
-    tags: ["best-seller"],
-    isFeatured: false,
-  },
-  {
-    name: "Noir Pullover Hoodie",
-    slug: "noir-pullover-hoodie",
-    description: "Brushed fleece hoodie with gold embroidered wordmark on the chest.",
-    category: "Hoodies",
-    price: 3200,
-    discountPrice: 2799,
-    images: ["https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800"],
-    variants: [
-      { size: "M", color: "Black", colorHex: "#0F0F0F", stock: 15 },
-      { size: "XL", color: "Black", colorHex: "#0F0F0F", stock: 6 },
-    ],
-    tags: ["trending", "best-seller", "new-arrival"],
-    isFeatured: true,
-  },
-];
+const productsData = require("../frontend/products.json");
 
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log("Connected to MongoDB for seeding...");
 
   await Product.deleteMany({});
-  await Product.insertMany(sampleProducts);
-  console.log(`Seeded ${sampleProducts.length} products`);
+  
+  // Clean up any potential data issues from the JSON before insertion
+  const cleanProducts = productsData.map(p => {
+    // Ensure all discountPrices are valid (must be < price)
+    if (p.discountPrice && p.discountPrice >= p.price) {
+      delete p.discountPrice;
+    }
+    return p;
+  });
+
+  await Product.insertMany(cleanProducts);
+  console.log(`Seeded ${cleanProducts.length} products from products.json`);
 
   // Create a default admin account if one doesn't already exist
   const adminEmail = "admin@bormonshopbd.com";

@@ -7,7 +7,7 @@ import { Product } from "@/types/product";
 import ProductCard from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/ProductCardSkeleton";
 
-const CATEGORIES = ["T-Shirts", "Shirts", "Pants", "Hoodies"];
+const CATEGORIES = ["T-Shirts", "Shirts", "Pants", "Hoodies", "Panjabis"];
 const SIZES = ["S", "M", "L", "XL", "XXL"];
 const PRICE_PRESETS = [
   { label: "Under ৳500", min: 0, max: 500 },

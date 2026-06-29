@@ -144,7 +144,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
             onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
             className="w-full bg-secondary border border-border rounded-lg px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-accent"
           >
-            {["T-Shirts", "Shirts", "Pants", "Hoodies"].map((c) => (
+            {["T-Shirts", "Shirts", "Pants", "Hoodies", "Panjabis"].map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>

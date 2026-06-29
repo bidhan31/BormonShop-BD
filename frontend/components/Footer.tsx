@@ -83,6 +83,7 @@ const SHOP_LINKS = [
   { label: "Shirts", href: "/shop?category=Shirts" },
   { label: "Pants", href: "/shop?category=Pants" },
   { label: "Hoodies", href: "/shop?category=Hoodies" },
+  { label: "Panjabis", href: "/shop?category=Panjabis" },
   { label: "New Arrivals", href: "/shop?tag=new-arrival" },
   { label: "Best Sellers", href: "/shop?tag=best-seller" },
 ];

@@ -6,7 +6,7 @@ const cloudinary = require("../config/cloudinary");
  * Supports the storefront's "Advanced Search & Multi-criteria Filters" feature.
  * Query params (all optional):
  *   q          — text search across name/description
- *   category   — "T-Shirts" | "Shirts" | "Pants" | "Hoodies"
+ *   category   — "T-Shirts" | "Shirts" | "Pants" | "Hoodies" | "Panjabis"
  *   minPrice / maxPrice
  *   size       — filters products that have a variant of this size
  *   tag        — "new-arrival" | "best-seller" | "trending"
@@ -16,7 +16,7 @@ const cloudinary = require("../config/cloudinary");
 exports.getProducts = async (req, res) => {
   try {
     console.log("Fetching products with query params:", req.query);
-    const { q, category, minPrice, maxPrice, size, tag, sort, page = 1, limit = 12 } = req.query;
+    const { q, category, minPrice, maxPrice, size, tag, sort, page = 1, limit = 48 } = req.query;
 
     const filter = { isActive: true };
 
@@ -44,14 +44,9 @@ exports.getProducts = async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    // const [products, total] = await Promise.all([
-    //   Product.find(filter).sort(sortOption).skip(skip).limit(Number(limit)),
-    //   Product.countDocuments(filter),
-    // ]);
-
     const [products, total] = await Promise.all([
-      Product.find(),
-      Product.countDocuments(),
+      Product.find(filter).sort(sortOption).skip(skip).limit(Number(limit)),
+      Product.countDocuments(filter),
     ]);
 
     return res.status(200).json({

@@ -1,18 +1,5 @@
 import { Product } from "@/types/product";
 
-/**
- * These functions simulate server-side data fetching from the Express/MongoDB API.
- * In production, replace the mock arrays below with:
- *   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?tag=new-arrival`);
- *   return res.json();
- *
- * Kept as async functions on purpose so the Home Page Server Component
- * doesn't need to change when you wire up the real API.
- */
-
-
-
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export async function getFeaturedProducts(): Promise<Product[]> {
@@ -77,7 +64,13 @@ interface SearchParams {
 
 export async function searchProducts(params: SearchParams): Promise<Product[]> {
   try {
-    const urlParams = new URLSearchParams(params as any);
+    const cleanParams: Record<string, string> = {};
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        cleanParams[key] = String(value);
+      }
+    });
+    const urlParams = new URLSearchParams(cleanParams);
     const res = await fetch(`${API_URL}/products?${urlParams.toString()}`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const data = await res.json();

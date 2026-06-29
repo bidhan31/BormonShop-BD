@@ -43,7 +43,7 @@ const productSchema = new Schema(
     category: {
       type: String,
       required: true,
-      enum: ["T-Shirts", "Shirts", "Pants", "Hoodies"],
+      enum: ["T-Shirts", "Shirts", "Pants", "Hoodies", "Panjabis"],
       index: true, // frequently filtered on, so indexed
     },
 
