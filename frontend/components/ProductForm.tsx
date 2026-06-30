@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { Category } from "@/types/category";
 
 interface VariantInput {
   size: string;
@@ -38,6 +39,13 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    api.get("/categories")
+      .then((data) => setCategories(data.categories || []))
+      .catch((err) => console.error("Failed to load categories:", err));
+  }, []);
 
   const handleVariantChange = (index: number, field: keyof VariantInput, value: string | number) => {
     setVariants((prev) => prev.map((v, i) => (i === index ? { ...v, [field]: value } : v)));
@@ -144,9 +152,10 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
             onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
             className="w-full bg-secondary border border-border rounded-lg px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-accent"
           >
-            {["T-Shirts", "Shirts", "Pants", "Hoodies", "Panjabis"].map((c) => (
-              <option key={c} value={c}>
-                {c}
+            <option value="" disabled>Select category</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c.name}>
+                {c.name}
               </option>
             ))}
           </select>
@@ -186,7 +195,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
               type="button"
               onClick={() => toggleTag(tag)}
               className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                form.tags.includes(tag) ? "bg-accent text-primary border-accent" : "border-border text-muted"
+                form.tags.includes(tag) ? "bg-accent text-accent-foreground border-accent" : "border-border text-muted"
               }`}
             >
               {tag}

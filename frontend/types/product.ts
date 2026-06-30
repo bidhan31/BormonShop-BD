@@ -18,7 +18,7 @@ export interface Product {
   slug: string;
   name: string;
   description: string;
-  category: "T-Shirts" | "Shirts" | "Pants" | "Hoodies" | "Panjabis";
+  category: string;
   price: number; // BDT
   discountPrice?: number;
   images: string[]; // Cloudinary URLs

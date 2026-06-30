@@ -43,7 +43,6 @@ const productSchema = new Schema(
     category: {
       type: String,
       required: true,
-      enum: ["T-Shirts", "Shirts", "Pants", "Hoodies", "Panjabis"],
       index: true, // frequently filtered on, so indexed
     },
 
@@ -54,7 +53,13 @@ const productSchema = new Schema(
       validate: {
         // Discount must always be cheaper than the original price
         validator: function (value) {
-          return value == null || value < this.price;
+          if (value == null) return true;
+          // When creating, `this` is the document. When updating, `this` is the query.
+          const price = this.price != null ? this.price : this.getUpdate?.().$set?.price ?? this.getUpdate?.().price;
+          // If price is missing from the update, we can't reliably validate it synchronously without fetching the document.
+          // But typically both are updated together, or we just allow it if we can't determine it.
+          if (price == null) return true;
+          return value < price;
         },
         message: "discountPrice must be lower than price",
       },

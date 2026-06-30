@@ -38,27 +38,31 @@ export const metadata: Metadata = {
   },
 };
 
+import { ThemeProvider } from "./ThemeProvider";
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    // class="dark" forces dark mode site-wide since this brand is dark-by-default
-    <html lang="en" className="dark">
+    // suppressHydrationWarning is needed because next-themes updates the class attribute on html
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${poppins.variable} font-sans bg-primary text-ink antialiased`}
       >
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-          <AuthProvider>
-            <CartProvider>
-              <Navbar />
-              {children}
-              <Footer />
-              <CartDrawer />
-            </CartProvider>
-          </AuthProvider>
-        </GoogleOAuthProvider>
+        <ThemeProvider>
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+            <AuthProvider>
+              <CartProvider>
+                <Navbar />
+                {children}
+                <Footer />
+                <CartDrawer />
+              </CartProvider>
+            </AuthProvider>
+          </GoogleOAuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

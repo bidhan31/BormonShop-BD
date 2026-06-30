@@ -150,10 +150,10 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#0A0A0A] border-t border-[#2A2A2A] mt-16" aria-label="Site footer">
+    <footer className="bg-primary border-t border-border mt-16" aria-label="Site footer">
 
       {/* ── Trust badges strip ─────────────────────────────────────────── */}
-      <div className="border-b border-[#1E1E1E]">
+      <div className="border-b border-border">
         <div className="max-w-6xl mx-auto px-4 md:px-10 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {TRUST_BADGES.map((badge) => (
             <div key={badge.label} className="flex items-center gap-3 group">
@@ -176,7 +176,7 @@ export default function Footer() {
         <div className="lg:col-span-2 space-y-5">
           {/* Logo */}
           <a href="/" aria-label="BormonShop BD — Home">
-            <img src="/shop-logo-dark.png" alt="BormonShop BD" className="h-10 w-auto" />
+            <img src="/final-logo-removebg-preview.png" alt="BormonShop BD" className="h-10 w-auto" />
           </a>
 
           <p className="text-muted text-sm leading-relaxed max-w-xs">
@@ -193,7 +193,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="w-9 h-9 rounded-full bg-[#1E1E1E] border border-[#2A2A2A] flex items-center justify-center
+                className="w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center
                            text-muted hover:text-accent hover:border-accent transition-all duration-200"
               >
                 {s.icon}
@@ -223,14 +223,14 @@ export default function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="flex-1 min-w-0 bg-[#1E1E1E] border border-[#2A2A2A] rounded-full px-4 py-2.5 text-sm
+                  className="flex-1 min-w-0 bg-secondary border border-border rounded-full px-4 py-2.5 text-sm
                              text-ink placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={subscribeStatus === "loading"}
-                  className="bg-accent text-primary font-semibold px-4 py-2.5 rounded-full text-sm
-                             hover:bg-[#D9A92E] transition-colors disabled:opacity-60 shrink-0"
+                  className="bg-accent text-accent-foreground font-semibold px-4 py-2.5 rounded-full text-sm
+                             hover:bg-accent-dark transition-colors disabled:opacity-60 shrink-0"
                 >
                   {subscribeStatus === "loading" ? "…" : "Join"}
                 </button>
@@ -331,7 +331,7 @@ export default function Footer() {
       </div>
 
       {/* ── Payment methods ────────────────────────────────────────────── */}
-      <div className="border-t border-[#1E1E1E]">
+      <div className="border-t border-border">
         <div className="max-w-6xl mx-auto px-4 md:px-10 py-5 flex flex-wrap items-center justify-between gap-4">
           <p className="text-muted text-xs">We accept</p>
           <div className="flex items-center gap-2 flex-wrap">
@@ -349,7 +349,7 @@ export default function Footer() {
       </div>
 
       {/* ── Legal bar ──────────────────────────────────────────────────── */}
-      <div className="border-t border-[#1E1E1E]">
+      <div className="border-t border-border">
         <div className="max-w-6xl mx-auto px-4 md:px-10 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-muted text-xs">
             © {new Date().getFullYear()} BormonShop BD. All rights reserved.

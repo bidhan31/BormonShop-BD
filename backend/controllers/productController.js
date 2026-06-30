@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Category = require("../models/Category");
 const cloudinary = require("../config/cloudinary");
 
 /**
@@ -91,6 +92,10 @@ exports.getRelatedProducts = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
+    if (req.body.category) {
+      const categoryExists = await Category.findOne({ name: req.body.category });
+      if (!categoryExists) return res.status(400).json({ success: false, message: "Invalid category" });
+    }
     const product = await Product.create(req.body);
     return res.status(201).json({ success: true, product });
   } catch (error) {

@@ -61,7 +61,7 @@ export default function ProductCard({ product, initialWishlisted = false, onWish
 
         {/* Discount badge */}
         {hasDiscount && (
-          <span className="absolute top-3 left-3 bg-accent text-primary text-xs font-bold px-2 py-1 rounded-full">
+          <span className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs font-bold px-2 py-1 rounded-full">
             -{discountPercent}%
           </span>
         )}

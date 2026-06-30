@@ -27,7 +27,7 @@ export default function OrderTrackingStepper({ currentStatus }: OrderTrackingSte
             <div className="flex flex-col items-center flex-1">
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${
-                  isComplete ? "bg-accent text-primary" : "bg-secondary border border-border text-muted"
+                  isComplete ? "bg-accent text-accent-foreground" : "bg-secondary border border-border text-muted"
                 }`}
               >
                 {isComplete ? "✓" : idx + 1}

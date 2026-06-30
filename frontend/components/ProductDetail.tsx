@@ -120,7 +120,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 onClick={() => setSelectedSize(size)}
                 className={`w-12 h-12 rounded-lg border text-sm font-medium transition-colors ${
                   selectedSize === size
-                    ? "bg-accent text-primary border-accent"
+                    ? "bg-accent text-accent-foreground border-accent"
                     : "border-border text-ink hover:border-accent"
                 }`}
               >

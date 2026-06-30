@@ -8,13 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#0F0F0F",   // Dark Black — main background
-        secondary: "#1E1E1E", // Slightly lighter panels/cards
-        accent: "#F5C542",    // Gold — CTAs, highlights, active states
-        "accent-dark": "#D9A92E", // hover/pressed state for gold elements
-        ink: "#FFFFFF",        // primary text on dark backgrounds
-        muted: "#A1A1AA",      // secondary/body text
-        border: "#2A2A2A",     // subtle dividers/card borders
+        primary: "var(--color-primary)",
+        secondary: "var(--color-secondary)",
+        accent: "var(--color-accent)",
+        "accent-dark": "var(--color-accent-dark)",
+        "accent-foreground": "var(--color-accent-foreground)",
+        ink: "var(--color-ink)",
+        muted: "var(--color-muted)",
+        border: "var(--color-border)",
         success: "#3FB68B",
         danger: "#E5484D",
       },

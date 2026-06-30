@@ -2,7 +2,7 @@ import Hero from "@/components/Hero";
 import CategoryGrid from "@/components/CategoryGrid";
 import FeaturedSection from "@/components/FeaturedSection";
 import HomepageReviews from "@/components/HomepageReviews";
-import { getProductsByTag } from "@/lib/data";
+import { getProductsByTag, getCategories } from "@/lib/data";
 
 // Revalidate this page every 60s so new products/admin changes show up
 // without needing a full rebuild — good middle ground for a storefront.
@@ -10,7 +10,8 @@ export const revalidate = 60;
 
 export default async function HomePage() {
   // Fetched in parallel — each powers one FeaturedSection below.
-  const [newArrivals, bestSellers, trending] = await Promise.all([
+  const [categories, newArrivals, bestSellers, trending] = await Promise.all([
+    getCategories(),
     getProductsByTag("new-arrival"),
     getProductsByTag("best-seller"),
     getProductsByTag("trending"),
@@ -20,7 +21,7 @@ export default async function HomePage() {
     <main className="bg-primary min-h-screen">
       <Hero />
 
-      <CategoryGrid />
+      <CategoryGrid categories={categories} />
 
       <FeaturedSection
         title="New Arrivals"

@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const orderRoutes = require("./routes/orders");
 const userRoutes = require("./routes/users");
+const categoryRoutes = require("./routes/categories");
 const couponRoutes = require("./routes/coupons");
 const paymentRoutes = require("./routes/payment");
 
@@ -27,6 +28,7 @@ app.use(
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);

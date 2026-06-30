@@ -136,7 +136,7 @@ function ReviewCard({ review }: { review: Review }) {
 
   return (
     <article
-      className="relative bg-[#131313] border border-[#2A2A2A] rounded-2xl p-6
+      className="relative bg-secondary border border-border rounded-2xl p-6
                  transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-gold
                  flex flex-col gap-4"
     >
@@ -188,7 +188,7 @@ function ReviewCard({ review }: { review: Review }) {
       </p>
 
       {/* Product tag */}
-      <div className="flex items-center gap-1.5 text-[11px] text-muted/70 border-t border-[#2A2A2A] pt-3 mt-auto">
+      <div className="flex items-center gap-1.5 text-[11px] text-muted/70 border-t border-border pt-3 mt-auto">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -224,7 +224,7 @@ export default function HomepageReviews() {
   return (
     <section
       id="customer-reviews"
-      className="px-4 md:px-10 py-20 border-t border-[#2A2A2A]"
+      className="px-4 md:px-10 py-20 border-t border-border"
       aria-labelledby="reviews-heading"
     >
       <div className="max-w-6xl mx-auto">
@@ -248,7 +248,7 @@ export default function HomepageReviews() {
           </div>
 
           {/* Rating summary box */}
-          <div className="bg-[#131313] border border-[#2A2A2A] rounded-2xl p-6 shrink-0 min-w-[220px]">
+          <div className="bg-secondary border border-border rounded-2xl p-6 shrink-0 min-w-[220px]">
             <div className="flex items-baseline gap-2 mb-1">
               <span className="font-display text-5xl font-bold text-ink">{averageRating}</span>
               <span className="text-accent text-2xl">★</span>
@@ -261,7 +261,7 @@ export default function HomepageReviews() {
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="#F5C542" className="shrink-0">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
-                  <div className="flex-1 h-1.5 bg-[#2A2A2A] rounded-full overflow-hidden">
+                  <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
                     <div
                       className="h-full bg-accent rounded-full transition-all duration-700"
                       style={{ width: visible ? `${percent}%` : "0%" }}
@@ -297,14 +297,14 @@ export default function HomepageReviews() {
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <a
               href="/shop"
-              className="bg-accent text-primary font-semibold px-8 py-3 rounded-full text-sm
-                         hover:bg-[#D9A92E] transition-colors duration-200"
+              className="bg-accent text-accent-foreground font-semibold px-8 py-3 rounded-full text-sm
+                         hover:bg-accent-dark transition-colors duration-200"
             >
               Shop &amp; Review
             </a>
             <a
               href="/shop"
-              className="border border-[#2A2A2A] text-ink font-medium px-8 py-3 rounded-full text-sm
+              className="border border-border text-ink font-medium px-8 py-3 rounded-full text-sm
                          hover:border-accent hover:text-accent transition-all duration-200"
             >
               View All Products

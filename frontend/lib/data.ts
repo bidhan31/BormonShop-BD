@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+import { Category } from "@/types/category";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
@@ -48,6 +49,18 @@ export async function getRelatedProducts(category: string, excludeId: string): P
     return data.products || [];
   } catch (err) {
     console.error("Failed to fetch related products:", err);
+    return [];
+  }
+}
+
+export async function getCategories(): Promise<Category[]> {
+  try {
+    const res = await fetch(`${API_URL}/categories`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.categories || [];
+  } catch (err) {
+    console.error("Failed to fetch categories:", err);
     return [];
   }
 }

@@ -4,10 +4,11 @@ import { useEffect, useState, useCallback, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { searchProducts } from "@/lib/data";
 import { Product } from "@/types/product";
+import { Category } from "@/types/category";
+import { api } from "@/lib/api";
 import ProductCard from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/ProductCardSkeleton";
 
-const CATEGORIES = ["T-Shirts", "Shirts", "Pants", "Hoodies", "Panjabis"];
 const SIZES = ["S", "M", "L", "XL", "XXL"];
 const PRICE_PRESETS = [
   { label: "Under ৳500", min: 0, max: 500 },
@@ -60,10 +61,10 @@ function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }
 
 // ── Filter Sidebar / Drawer content ──────────────────────────────────────────
 function FilterPanel({
-  category, size, minPrice, maxPrice,
+  categories, category, size, minPrice, maxPrice,
   onCategory, onSize, onMinPrice, onMaxPrice, onClearAll,
 }: {
-  category: string; size: string; minPrice: string; maxPrice: string;
+  categories: Category[]; category: string; size: string; minPrice: string; maxPrice: string;
   onCategory: (v: string) => void; onSize: (v: string) => void;
   onMinPrice: (v: string) => void; onMaxPrice: (v: string) => void;
   onClearAll: () => void;
@@ -89,17 +90,17 @@ function FilterPanel({
       <div>
         <p className="text-[10px] text-muted mb-3 uppercase tracking-widest font-semibold">Category</p>
         <div className="space-y-2">
-          {CATEGORIES.map((c) => (
-            <label key={c} className="flex items-center gap-2.5 cursor-pointer group">
+          {categories.map((c) => (
+            <label key={c._id} className="flex items-center gap-2.5 cursor-pointer group">
               <input
                 type="radio"
                 name="category"
-                checked={category === c}
-                onChange={() => onCategory(category === c ? "" : c)}
+                checked={category === c.name}
+                onChange={() => onCategory(category === c.name ? "" : c.name)}
                 className="accent-accent w-3.5 h-3.5"
               />
-              <span className={`text-sm transition-colors ${category === c ? "text-accent font-medium" : "text-ink group-hover:text-accent/80"}`}>
-                {c}
+              <span className={`text-sm transition-colors ${category === c.name ? "text-accent font-medium" : "text-ink group-hover:text-accent/80"}`}>
+                {c.name}
               </span>
             </label>
           ))}
@@ -116,8 +117,8 @@ function FilterPanel({
               onClick={() => onSize(size === s ? "" : s)}
               className={`w-10 h-10 rounded-xl border text-xs font-semibold transition-all duration-200 ${
                 size === s
-                  ? "bg-accent text-primary border-accent shadow-gold"
-                  : "border-[#2A2A2A] text-ink hover:border-accent/50 hover:text-accent"
+                  ? "bg-accent text-accent-foreground border-accent shadow-gold"
+                  : "border-border text-ink hover:border-accent/50 hover:text-accent"
               }`}
             >
               {s}
@@ -148,7 +149,7 @@ function FilterPanel({
                 className={`w-full text-left text-sm px-3 py-2 rounded-lg border transition-all duration-200 ${
                   isActive
                     ? "bg-accent/10 border-accent/40 text-accent"
-                    : "border-[#2A2A2A] text-muted hover:border-accent/30 hover:text-ink"
+                    : "border-border text-muted hover:border-accent/30 hover:text-ink"
                 }`}
               >
                 {preset.label}
@@ -166,7 +167,7 @@ function FilterPanel({
             placeholder="Min"
             value={minPrice}
             onChange={(e) => onMinPrice(e.target.value)}
-            className="w-full bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg px-3 py-2 text-xs text-ink
+            className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-xs text-ink
                        placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
           />
           <input
@@ -175,7 +176,7 @@ function FilterPanel({
             placeholder="Max"
             value={maxPrice}
             onChange={(e) => onMaxPrice(e.target.value)}
-            className="w-full bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg px-3 py-2 text-xs text-ink
+            className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-xs text-ink
                        placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
           />
         </div>
@@ -204,7 +205,14 @@ function ShopContent() {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    api.get("/categories")
+      .then((data) => setCategories(data.categories || []))
+      .catch((err) => console.error("Failed to load categories:", err));
+  }, []);
 
   const q = searchParams.get("q") || "";
   const tag = searchParams.get("tag") || "";
@@ -294,7 +302,7 @@ function ShopContent() {
           />
           {/* Drawer panel */}
           <aside
-            className="relative ml-auto w-80 max-w-[90vw] h-full bg-[#0F0F0F] border-l border-[#2A2A2A]
+            className="relative ml-auto w-80 max-w-[90vw] h-full bg-primary border-l border-border
                        p-6 overflow-y-auto animate-fadeIn"
             aria-label="Filter panel"
           >
@@ -309,6 +317,7 @@ function ShopContent() {
               </svg>
             </button>
             <FilterPanel
+              categories={categories}
               category={category} size={size} minPrice={minPrice} maxPrice={maxPrice}
               onCategory={setCategory} onSize={setSize}
               onMinPrice={handleMinPrice} onMaxPrice={handleMaxPrice}
@@ -316,8 +325,8 @@ function ShopContent() {
             />
             <button
               onClick={() => setMobileDrawerOpen(false)}
-              className="mt-8 w-full bg-accent text-primary font-semibold py-3 rounded-full text-sm
-                         hover:bg-[#D9A92E] transition-colors"
+              className="mt-8 w-full bg-accent text-accent-foreground font-semibold py-3 rounded-full text-sm
+                         hover:bg-accent-dark transition-colors"
             >
               Show Results ({products.length})
             </button>
@@ -335,7 +344,7 @@ function ShopContent() {
           </h1>
           <button
             onClick={() => setMobileDrawerOpen(true)}
-            className="flex items-center gap-2 border border-[#2A2A2A] text-ink text-sm
+            className="flex items-center gap-2 border border-border text-ink text-sm
                        px-4 py-2 rounded-full hover:border-accent hover:text-accent transition-all"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -345,7 +354,7 @@ function ShopContent() {
             </svg>
             Filters
             {activeFilters.length > 0 && (
-              <span className="bg-accent text-primary text-[10px] font-bold rounded-full w-5 h-5
+              <span className="bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-5 h-5
                                flex items-center justify-center">
                 {activeFilters.length}
               </span>
@@ -356,8 +365,9 @@ function ShopContent() {
         <div className="grid md:grid-cols-4 gap-8">
           {/* ── Sidebar (desktop) ──────────────────────────────────────── */}
           <aside className="hidden md:block md:col-span-1">
-            <div className="sticky top-24 bg-[#131313] border border-[#2A2A2A] rounded-2xl p-5">
+            <div className="sticky top-24 bg-secondary border border-border rounded-2xl p-5">
               <FilterPanel
+                categories={categories}
                 category={category} size={size} minPrice={minPrice} maxPrice={maxPrice}
                 onCategory={setCategory} onSize={setSize}
                 onMinPrice={handleMinPrice} onMaxPrice={handleMaxPrice}
@@ -376,7 +386,7 @@ function ShopContent() {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-4 py-2 text-sm text-ink
+                className="bg-secondary border border-border rounded-xl px-4 py-2 text-sm text-ink
                            focus:outline-none focus:border-accent transition-colors"
               >
                 <option value="newest">Newest</option>
@@ -394,7 +404,7 @@ function ShopContent() {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl px-3 py-2 text-xs text-ink
+                className="bg-secondary border border-border rounded-xl px-3 py-2 text-xs text-ink
                            focus:outline-none focus:border-accent"
               >
                 <option value="newest">Newest</option>
@@ -440,8 +450,8 @@ function ShopContent() {
                 <p className="text-muted text-sm mb-5">Try adjusting your filters or search term.</p>
                 <button
                   onClick={clearAll}
-                  className="bg-accent text-primary font-semibold px-6 py-2.5 rounded-full text-sm
-                             hover:bg-[#D9A92E] transition-colors"
+                  className="bg-accent text-accent-foreground font-semibold px-6 py-2.5 rounded-full text-sm
+                             hover:bg-accent-dark transition-colors"
                 >
                   Clear Filters
                 </button>

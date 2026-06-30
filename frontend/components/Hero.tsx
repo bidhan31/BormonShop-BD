@@ -15,11 +15,11 @@ export default function Hero() {
 
       {/* Dark gradient overlay so text stays legible over any photo */}
       <div className="">
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/60 to-primary/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-#000000 via-#0F0F0F/60 to-#000000/20" />
 
         <div className="relative pt-16 h-full flex flex-col items-center justify-center text-center px-6 ">
-          <p className=" text-accent uppercase tracking-[0.2em] text-sm font-medium mb-4 animate-fade-up">
-            BormonShop BD
+          <p className=" uppercase tracking-[0.3em]  font-bold mb-4 text-3xl animate-fade-up flex">
+            <strong className=" text-accent mr-5" >BormonShop </strong> BD
           </p>
           <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-ink leading-tight max-w-3xl animate-fade-up">
             New Collection <span className="text-accent">2026</span>

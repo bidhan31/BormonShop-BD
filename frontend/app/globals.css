@@ -3,8 +3,41 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-primary: #FFFFFF;
+    --color-secondary: #F3F4F6;
+    --color-accent: #E5B222;
+    --color-accent-dark: #C99A1C;
+    --color-accent-foreground: #000000;
+    --color-ink: #0F0F0F;
+    --color-muted: #6B7280;
+    --color-border: #E5E7EB;
+  }
+
+  .dark {
+    --color-primary: #0F0F0F;
+    --color-secondary: #1E1E1E;
+    --color-accent: #F5C542;
+    --color-accent-dark: #D9A92E;
+    --color-accent-foreground: #0F0F0F;
+    --color-ink: #FFFFFF;
+    --color-muted: #A1A1AA;
+    --color-border: #2A2A2A;
+  }
+
+  .ambient {
+    --color-primary: #1A1A2E;
+    --color-secondary: #16213E;
+    --color-accent: #E94560;
+    --color-accent-dark: #C81D4E;
+    --color-accent-foreground: #FFFFFF;
+    --color-ink: #FFFFFF;
+    --color-muted: #B0B0C0;
+    --color-border: #2A2A4A;
+  }
+
   body {
-    @apply selection:bg-accent selection:text-primary;
+    @apply selection:bg-accent selection:text-accent-foreground transition-colors duration-300;
   }
 }
 
@@ -24,7 +57,7 @@
 
   /* Reusable gold CTA button */
   .btn-gold {
-    @apply bg-accent text-primary font-semibold px-6 py-3 rounded-full
+    @apply bg-accent text-accent-foreground font-semibold px-6 py-3 rounded-full
            transition-all duration-300 ease-out
            hover:bg-accent-dark hover:shadow-gold
            active:scale-[0.98];

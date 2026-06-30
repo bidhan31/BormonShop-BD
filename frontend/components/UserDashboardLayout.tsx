@@ -26,7 +26,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
               key={link.href}
               href={link.href}
               className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
-                pathname === link.href ? "bg-accent text-primary font-medium" : "text-ink hover:bg-secondary"
+                pathname === link.href ? "bg-accent text-accent-foreground font-medium" : "text-ink hover:bg-secondary"
               }`}
             >
               {link.label}

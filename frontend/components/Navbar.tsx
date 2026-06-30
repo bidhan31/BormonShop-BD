@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 
+import ThemeSwitcher from "./ThemeSwitcher";
+
 export default function Navbar() {
   const router = useRouter();
   const { itemCount, openCart } = useCart();
@@ -22,15 +24,16 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-primary/70 backdrop-blur border-b border-border">
-      <nav className="max-w-6xl mx-auto px-4 md:px-10 h-16 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 bg-primary/70 backdrop-blur border-b border-border transition-colors duration-300">
+      <nav className="max-w-6xl mx-auto px-4 md:px-10 h-16 flex items-center justify-between gap-4 font-bold tracking-wider">
         {/* Logo */}
-        <a href="/">
-          <img src="/shop-logo-dark.png" alt="BormonShop BD Logo" className="h-10 w-auto   " />
-        </a>
-        {/* <Link href="/" className="font-display font-bold text-lg text-ink shrink-0">
-          Bormon<span className="text-accent">Shop</span> BD
-        </Link> */}
+        <div className="flex items-center">
+          <a href="/">
+            <img src="/final-logo-removebg-preview.png" alt="BormonShop BD Logo" className="h-[65px] w-auto   " />
+          </a>
+          <Link href="/" className="font-display font-bold text-lg text-ink text-left mt-10">.<span className="text-accent">BD</span>
+          </Link>
+        </div>
 
         {/* Search — hidden on small screens to save space, shown in mobile menu instead */}
         <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-sm">
@@ -47,6 +50,10 @@ export default function Navbar() {
 
         {/* Right-side actions */}
         <div className="flex items-center gap-4">
+          <div className="hidden md:block">
+            <ThemeSwitcher />
+          </div>
+
           <Link href="/shop" className="hidden md:inline text-sm text-ink hover:text-accent transition-colors">
             Shop
           </Link>
@@ -80,7 +87,7 @@ export default function Navbar() {
               <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" />
             </svg>
             {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-accent text-primary text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                 {itemCount}
               </span>
             )}
@@ -101,7 +108,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border px-4 py-4 space-y-3">
+        <div className="md:hidden border-t border-border px-4 py-4 space-y-3 bg-primary">
           <form onSubmit={handleSearch}>
             <input
               type="search"
@@ -111,6 +118,10 @@ export default function Navbar() {
               className="w-full bg-secondary border border-border rounded-full px-4 py-2 text-sm text-ink placeholder:text-muted"
             />
           </form>
+          <div className="py-2 flex items-center justify-between">
+            <span className="text-sm text-ink">Theme</span>
+            <ThemeSwitcher />
+          </div>
           <Link href="/shop" className="block text-sm text-ink py-1" onClick={() => setIsMobileMenuOpen(false)}>
             Shop
           </Link>

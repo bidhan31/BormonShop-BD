@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/AuthContext";
 const links = [
   { href: "/dashboard/admin", label: "Overview" },
   { href: "/dashboard/admin/products", label: "Products" },
+  { href: "/dashboard/admin/categories", label: "Categories" },
   { href: "/dashboard/admin/orders", label: "Orders" },
   { href: "/dashboard/admin/customers", label: "Customers" },
   { href: "/dashboard/admin/payments", label: "Payments" },
@@ -39,7 +40,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
               key={link.href}
               href={link.href}
               className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
-                pathname === link.href ? "bg-accent text-primary font-medium" : "text-ink hover:bg-secondary"
+                pathname === link.href ? "bg-accent text-accent-foreground font-medium" : "text-ink hover:bg-secondary"
               }`}
             >
               {link.label}
